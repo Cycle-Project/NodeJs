@@ -25,7 +25,7 @@ app.use('/api/users', require('./routes/users'));
 app.use('/api/stores', require('./routes/stores'));
 
 app.get("/", (req, res) => {
-    res.json({ message: "Welcome to fatihin application." });
+    res.json({ message: "Welcome to fatihin BikeOn application." });
   });
 
 const PORT = process.env.PORT || 4652;
