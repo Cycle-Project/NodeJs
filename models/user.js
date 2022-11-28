@@ -23,7 +23,6 @@ const emailValidator = [
 ];
 
 
-
 // Define the database model
 const UserSchema = new mongoose.Schema({
   name: {
@@ -37,20 +36,28 @@ const UserSchema = new mongoose.Schema({
     unique: true,
     validate: emailValidator
   },
-  age: {
-    type: Number,
-  },
-  gender: {
-    type: String,
-  },
-  id: {
-    type: String,
-    required: [true, 'Please add a store ID'],
-    unique: true,
+ 
+  followers: {
+    type: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user"
+    }],
+    required: [false],
+    unique: false,
     trim: true,
-    maxlength: [10, 'Store ID must be less than 10 chars']
+    default: null,
+    maxlength: [100]
   },
-});
+  following: {
+    type: Array,
+    required: [false],
+    unique: false,
+    default: null,
+    trim: true,
+    maxlength: [100]
+  },
+}, {timestamps: true}
+);
 
 // Use the unique validator plugin
 UserSchema.plugin(unique, { message: 'That {PATH} is already taken.' });
