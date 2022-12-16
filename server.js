@@ -6,7 +6,7 @@ const connectDB = require('./config/db');
 
 // load environment  vars
 
-dotenv.config({path: './config/config.env'});
+dotenv.config({ path: './config/config.env' });
 
 //Connect to Database
 connectDB();
@@ -26,12 +26,14 @@ app.use('/api/stores', require('./routes/stores'));
 
 app.use('/api/post', require('./routes/posts'));
 
+app.use('/api/route', require('./routes/route'));
+
 app.get("/", (req, res) => {
-    res.json({ message: "Welcome to fatihin BikeOn application." });
-  });
+  res.json({ message: "Welcome to fatihin BikeOn application." });
+});
 
 const PORT = process.env.PORT || 4652;
 
 app.listen(PORT, () =>
-console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
+  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
 );
