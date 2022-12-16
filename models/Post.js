@@ -10,18 +10,6 @@ const CommentValidator = [
   })
 ];
 
-const emailValidator = [
-  validate({
-    validator: 'isLength',
-    arguments: [0, 40],
-    message: 'Email must not exceed {ARGS[1]} characters.'
-  }),
-  validate({
-    validator: 'isEmail',
-    message: 'Email must be valid.'
-  })
-];
-
 
 // Define the database model
 const PostSchema = new mongoose.Schema({
@@ -32,13 +20,11 @@ const PostSchema = new mongoose.Schema({
   },
   like: {
     type: String,
-   
-   
-   //validate: emailValidator
+    required: false
   },
- 
   share: {
-    type:Array
+    type: Array,
+    required: false
   },
 }
 );
