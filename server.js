@@ -20,13 +20,13 @@ app.use(express.json());
 app.use(cors());
 
 //Routes
-app.use('/api/users', require('./routes/users'));
+app.use('/api/users', require('./routes/users.js'));
 
-app.use('/api/stores', require('./routes/stores'));
+app.use('/api/stores', require('./routes/stores.js'));
 
-app.use('/api/post', require('./routes/posts'));
+app.use('/api/post', require('./routes/posts.js'));
 
-app.use('/api/route', require('./routes/route'));
+app.use('/api/route', require('./routes/route.js'));
 
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to fatihin BikeOn application." });
