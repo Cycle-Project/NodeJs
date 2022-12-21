@@ -1,5 +1,5 @@
 const Route = require('../models/route');
-const { route } = require('../routes/route');
+
 
 exports.getRoutes = async (req, res, next) => {
     try {
