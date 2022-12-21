@@ -32,4 +32,4 @@ const PostSchema = new mongoose.Schema({
 // Use the unique validator plugin
 PostSchema.plugin(unique, { message: 'That {PATH} is already taken.' });
 
-const User = module.exports = mongoose.model('post', PostSchema);
+module.exports = mongoose.model('post', PostSchema);
