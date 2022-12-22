@@ -1,7 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const connectDB = require('./config/db');
+const connectDB = require('../NodeJs/config/db.js');
 
 // load environment  vars
 
@@ -13,7 +13,8 @@ connectDB();
 const app = express();
 
 //Body Parser
-app.use(express.json());
+app.use(express.json({ limit: "5mb" }));
+
 
 //Enable Cors
 app.use(cors());

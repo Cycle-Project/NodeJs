@@ -36,7 +36,9 @@ const UserSchema = new mongoose.Schema({
     unique: true,
     validate: emailValidator
   },
- 
+
+  password: { type: String },
+
   followers: {
     type: [{
       type: mongoose.Schema.Types.ObjectId,
@@ -56,7 +58,8 @@ const UserSchema = new mongoose.Schema({
     trim: true,
     maxlength: [100]
   },
-}, {timestamps: true}
+  token: { type: String },
+}, { timestamps: true }
 );
 
 // Use the unique validator plugin
