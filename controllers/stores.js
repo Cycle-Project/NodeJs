@@ -1,4 +1,4 @@
-const Store = require('../models/Store.js');
+const Store = require('./models/Store.js');
 
 // @desc  Get all stores
 // @route GET /api/v1/stores
