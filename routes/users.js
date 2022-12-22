@@ -1,8 +1,7 @@
-const { Router } = require('express');
 const express = require('express');
 const router = express.Router();
 
-const controller = require('./controllers/users.js');
+const controller = require('../controllers/users.js');
 
 /**
  *  @description Root Route
