@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const controller = require('../controllers/posts.js');
+const controller = require('controllers/posts.js');
 
 /**
  *  @description Root Route
