@@ -1,7 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const connectDB = require('../NodeJs/config/db.js');
+const connectDB = require('./config/db.js');
 
 // load environment  vars
 
