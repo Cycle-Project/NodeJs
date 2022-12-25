@@ -1,7 +1,7 @@
-const User = require('models/user.js');
+const User = require('../models/user.js');
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const auth = require("security/middleware/auth.js");
+const auth = require("../security/middleware/auth.js");
 exports.postregister = (async (req, res, next) => {
 
   try {
