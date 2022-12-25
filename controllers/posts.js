@@ -1,5 +1,3 @@
-resolve = require('path').resolve
-
 const Post = require('../models/post.js');
 exports.getPosts = async (req, res, next) => {
   try {
