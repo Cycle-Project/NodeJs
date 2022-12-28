@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Parcel Sandbox</title>
+    <meta charset="UTF-8" />
+</head>
+<style>
+    body {
+        font-family: sans-serif;
+    }
+
+    .rive-container-webgl canvas {
+        background-color: red;
+    }
+
+    .rive-container-canvas canvas {
+        background-color: red;
+    }
+
+    .container {
+        width: auto;
+    }
+
+    #canvas {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    h1 {
+        text-align: center;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <h1>Welcome to CycleOn Backend Services</h1>
+        <div class="container">
+            <canvas id="canvas" height="500" width="800"></canvas>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@rive-app/canvas@1.0.79"></script>
+    <script>
+        new rive.Rive({
+            src: "1050-2061-thats-no-moon.riv",
+            canvas: document.getElementById("canvas"),
+            autoplay: true
+        });
+    </script>
+</body>
+
+</html>

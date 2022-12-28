@@ -2,6 +2,9 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db.js');
+const path = require('path');
+const { Router } = require('express');
+const router = express.Router();
 
 // load environment  vars
 
@@ -28,14 +31,22 @@ app.use('/api/post', require('./routes/posts.js'));
 
 app.use('/api/route', require('./routes/route.js'));
 
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to fatihin BikeOn application." });
+router.get('/', function (req, res) {
+  res.sendFile(path.join(__dirname + '/public/index.html'));
+  //__dirname : It will resolve to your project folder.
 });
 
-const PORT = process.env.PORT || 4652;
 
+const PORT = process.env.PORT || 4652;
+app.use('/', router);
 app.listen(PORT, () =>
 
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
 );
+
+
+
+
+
+
 
