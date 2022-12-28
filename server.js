@@ -5,7 +5,7 @@ const connectDB = require('./config/db.js');
 const path = require('path');
 const { Router } = require('express');
 const router = express.Router();
-
+const auth = require("./security/middleware/auth");
 // load environment  vars
 
 dotenv.config({ path: './config/config.env' });
@@ -23,11 +23,11 @@ app.use(express.json({ limit: "5mb" }));
 app.use(cors());
 
 //Routes
-app.use('/api/users', require('./routes/users.js'));
+app.use('/api/users', require('./routes/users.js'), auth);
 
-app.use('/api/stores', require('./routes/stores.js'));
+app.use('/api/stores', require('./routes/stores.js'), auth);
 
-app.use('/api/post', require('./routes/posts.js'));
+app.use('/api/post', require('./routes/posts.js'), auth);
 
 app.use('/api/route', require('./routes/route.js'));
 
