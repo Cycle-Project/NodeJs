@@ -7,7 +7,8 @@ const { Router } = require('express');
 const router = express.Router();
 const auth = require("./security/middleware/auth");
 const swaggerUI = require("swagger-ui-express");
-const docs = require('./docs/basicInfo');
+const docs = require('./docs');
+//const swaggerFile = require('../swagger-output.json')
 // load environment  vars
 
 dotenv.config({ path: './config/config.env' });
@@ -19,6 +20,7 @@ const app = express();
 
 //Body Parser
 app.use(express.json({ limit: "5mb" }));
+
 
 
 //Enable Cors
@@ -39,6 +41,7 @@ router.get('/', function (req, res) {
 });
 
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(docs));
+//app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 
 const PORT = process.env.PORT || 4652;

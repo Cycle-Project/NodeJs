@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "build": "node server.js"
+    "build": "node server.js",
+    "swagger-autogen": "node ./docs/swagger.js"
   },
   "engines": {
     "node": ">=14"
