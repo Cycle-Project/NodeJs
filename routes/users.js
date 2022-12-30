@@ -27,6 +27,6 @@ router.put('/updateuser', controller.update)
 
 router.delete('/deletebyid/:id', controller.delete)
 
-router.delete('delete/all/users/', controller.deleteAll)
+router.delete('/delete/all/users', controller.deleteAll)
 
 module.exports = router;
