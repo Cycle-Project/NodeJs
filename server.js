@@ -6,6 +6,8 @@ const path = require('path');
 const { Router } = require('express');
 const router = express.Router();
 const auth = require("./security/middleware/auth");
+const swaggerUI = require("swagger-ui-express");
+const docs = require('./docs/basicInfo');
 // load environment  vars
 
 dotenv.config({ path: './config/config.env' });
@@ -35,6 +37,8 @@ router.get('/', function (req, res) {
   res.sendFile(path.join(__dirname + '/public/index.html'));
   //__dirname : It will resolve to your project folder.
 });
+
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(docs));
 
 
 const PORT = process.env.PORT || 4652;
