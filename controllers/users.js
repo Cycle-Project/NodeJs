@@ -68,6 +68,7 @@ exports.postuser = ("/login", async (req, res) => {
         process.env.TOKEN_KEY,
         {
           expiresIn: "2h",
+
         }
       );
 
@@ -83,7 +84,7 @@ exports.postuser = ("/login", async (req, res) => {
   }
 });
 
-exports.getUsers = async (req, res, next, auth) => {
+exports.getUsers = async (req, res, next) => {
   try {
     const users = await User.find();
 
@@ -166,7 +167,7 @@ exports.delete = (req, res) => {
 
 // Delete all Tutorials from the database.
 exports.deleteAll = (req, res) => {
-  User.removeAll((err, data) => {
+  User.deleteMany((err) => {
     if (err)
       res.status(500).send({
         message:

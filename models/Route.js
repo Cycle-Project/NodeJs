@@ -28,6 +28,10 @@ const RouteSchema = new mongoose.Schema({
         trim: true,
         maxlength: [20, 'city must be less than 10 chars']
     },
+    iddeneme: {
+        type: String,
+        required: false
+    }
 
 });
 

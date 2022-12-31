@@ -22,7 +22,7 @@ exports.getRoutes = async (req, res, next) => {
 exports.createRoute = async (req, res, next) => {
     try {
         const routes = await Route.create(req.body);
-
+        routes.iddeneme = req.payload.id
         return res.status(201).json({
             success: true,
             data: routes, Date
