@@ -9,5 +9,9 @@ module.exports = {
             email: "fatihhevevsli@gmail.com", // your email
 
         },
+
     },
+    "schemes": ["http"],
+    "consumes": ["application/json"],
+    "produces": ["application/json"]
 };

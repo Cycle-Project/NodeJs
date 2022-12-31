@@ -65,7 +65,7 @@ exports.update = (req, res) => {
 };
 
 exports.delete = (req, res) => {
-  Tutorial.remove(req.params.id, (err, data) => {
+  User.remove(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
@@ -82,7 +82,7 @@ exports.delete = (req, res) => {
 
 // Delete all Tutorials from the database.
 exports.deleteAll = (req, res) => {
-  Tutorial.removeAll((err, data) => {
+  User.removeAll(req.params.id, (err, data) => {
     if (err)
       res.status(500).send({
         message:
