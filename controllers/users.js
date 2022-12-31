@@ -176,13 +176,13 @@ exports.deleteAll = (req, res) => {
   });
 };
 
-exports.findbyid = (req,res) => {
-  User.findById((err,data) => {
-    if(err)
-    res.status(500).send({
-      message:
-      err.message || "Error occured. FindById."
-    });
+exports.findbyid = (req, res) => {
+  User.findById(req.params.id, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Error occured. FindById."
+      });
     else res.send(data)
   });
 };
