@@ -1,14 +1,14 @@
 const { Router } = require('express');
 const express = require('express');
 const router = express.Router();
-
+const auth = require("../security/middleware/auth.js");
 const controller = require('../controllers/route.js');
 
 /**
  *  @description Root Route
  *  @method GET /
  */
-router.get('/list', controller.getRoutes);
+router.get('/list', auth, controller.getRoutes);
 
 /**
  *  @description add users

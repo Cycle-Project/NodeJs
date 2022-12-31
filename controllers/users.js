@@ -72,7 +72,7 @@ exports.postuser = ("/login", async (req, res) => {
       );
 
       // save user token
-      user.token = 'Bearer ' + token;
+      user.token = token;
 
       // user
       res.status(200).json(user);
@@ -83,7 +83,7 @@ exports.postuser = ("/login", async (req, res) => {
   }
 });
 
-exports.getUsers = async (req, res, next) => {
+exports.getUsers = async (req, res, next, auth) => {
   try {
     const users = await User.find();
 

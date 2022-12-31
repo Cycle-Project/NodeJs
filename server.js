@@ -33,7 +33,7 @@ app.use('/api/stores', require('./routes/stores.js'), auth);
 
 app.use('/api/post', require('./routes/posts.js'), auth);
 
-app.use('/api/route', require('./routes/route.js'));
+app.use('/api/route', require('./routes/route.js'), auth);
 
 router.get('/', function (req, res) {
   res.sendFile(path.join(__dirname + '/public/index.html'));
