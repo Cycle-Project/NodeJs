@@ -24,7 +24,7 @@ router.post('/add-user', auth, controller.createuser)
  *  @description for update user
  *  @method GET /update-user
  */
-router.put('/updateuser', auth, controller.update)
+router.put('/updateuser/:id', auth, controller.update)
 
 router.delete('/deletebyid/:id', auth, controller.delete)
 

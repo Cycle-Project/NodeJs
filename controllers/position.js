@@ -1,15 +1,14 @@
-const Route = require('../models/Route.js');
-const verifyToken = require('../security/middleware/auth.js');
+const Position = require('../models/Position.js');
 
 
-exports.getRoutes = async (req, res, next) => {
+exports.getPosition = async (req, res, next) => {
     try {
-        const routes = await Route.find();
+        const position = await Position.find();
 
         return res.status(200).json({
             success: true,
-            count: routes.length,
-            data: routes
+            count: position.length,
+            data: position
         });
     } catch (err) {
         console.error(err);
@@ -20,19 +19,19 @@ exports.getRoutes = async (req, res, next) => {
 
 // @desc  Create a store
 // @access Public
-exports.createRoute = async (req, res, next) => {
+exports.createPosition = async (req, res, next) => {
     try {
-        const routes = await Route.create(req.body);
+        const position = await Position.create(req.body);
         return res.status(201).json({
             success: true,
-            data: routes
+            data: position
 
 
         });
     } catch (err) {
         console.error(err);
         if (err.code === 11000) {
-            return res.status(400).json({ error: 'This route already exists' });
+            return res.status(400).json({ error: 'This position already exists' });
         }
         res.status(500).json({ error: 'Server error' });
     }
@@ -47,19 +46,19 @@ exports.update = (req, res) => {
     }
 
     console.log(req.body);
-    const routes = Route.find();
-    Routes.findByIdAndUpdate(
+
+    Route.updateById(
         req.params.id,
-        new Route(req.body),
+        new position(req.body),
         (err, data) => {
             if (err) {
                 if (err.kind === "not_found") {
                     res.status(404).send({
-                        message: `Not found User with id ${req.params.id}.`
+                        message: `Not found position with id ${req.params.id}.`
                     });
                 } else {
                     res.status(500).send({
-                        message: "Error updating User with id " + req.params.id
+                        message: "Error updating position with id " + req.params.id
                     });
                 }
             } else res.send(data);
@@ -68,30 +67,30 @@ exports.update = (req, res) => {
 };
 
 exports.delete = (req, res) => {
-    Tutorial.remove(req.params.id, (err, data) => {
+    Position.remove(req.params.id, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
-                    message: `Not found user with id ${req.params.id}.`
+                    message: `Not found position with id ${req.params.id}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Could not delete user with id " + req.params.id
+                    message: "Could not delete position with id " + req.params.id
                 });
             }
-        } else res.send({ message: `route was deleted successfully!` });
+        } else res.send({ message: `position was deleted successfully!` });
     });
 };
 
 // Delete all Tutorials from the database.
 exports.deleteAll = (req, res) => {
-    Tutorial.removeAll((err, data) => {
+    Position.removeAll((err, data) => {
         if (err)
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while removing all route."
+                    err.message || "Some error occurred while removing all position."
             });
-        else res.send({ message: `All Users were deleted successfully!` });
+        else res.send({ message: `All position were deleted successfully!` });
     });
 };
 

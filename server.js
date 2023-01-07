@@ -35,6 +35,8 @@ app.use('/api/post', require('./routes/posts.js'), auth);
 
 app.use('/api/route', require('./routes/route.js'), auth);
 
+app.use('/api/position', require('./routes/position.js'), auth);
+
 router.get('/', function (req, res) {
   res.sendFile(path.join(__dirname + '/public/index.html'));
   //__dirname : It will resolve to your project folder.
