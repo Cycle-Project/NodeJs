@@ -1,29 +1,42 @@
-const { Router } = require('express');
 const express = require('express');
 const router = express.Router();
 const auth = require("../security/middleware/auth.js");
 const controller = require('../controllers/route.js');
 
 /**
- *  @description Root Route
- *  @method GET /
+ *  @description Route route
+ *  @method GET /list
  */
 router.get('/list', auth, controller.getRoutes);
 
 /**
- *  @description add users
- *  @method GET /add-user
+ *  @description add route
+ *  @method POST /add-route
  */
-router.post('/add-route', controller.createRoute)
+router.post('/create-route', controller.createRoute)
 
 /**
- *  @description for update user
- *  @method GET /update-user
+ *  @description add position to route
+ *  @method PUT /add-position
+ *  @param id route_id
+ *  @body position
  */
-router.put('/update', controller.update)
+router.put('/add-position/:id', controller.addPosition)
 
+/**
+ *  @description for update route
+ *  @method PUT /update
+ *  @param id route_id
+ */
+router.put('/update/:id', controller.update)
+
+/**
+ *  @description for delete route 
+ *  @method DELETE /deletebyid/:id
+ *  @param id route_id
+ */
 router.delete('/deletebyid/:id', controller.delete)
 
-router.delete('delete/all/route/', controller.deleteAll)
+router.delete('/delete/all', controller.deleteAll)
 
 module.exports = router;

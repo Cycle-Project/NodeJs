@@ -45,9 +45,9 @@ exports.update = (req, res) => {
 
   console.log(req.body);
 
-  Tutorial.updateById(
+  Post.updateOne(
     req.params.id,
-    new post(req.body),
+    new Post(req.body),
     (err, data) => {
       if (err) {
         if (err.kind === "not_found") {
@@ -65,7 +65,7 @@ exports.update = (req, res) => {
 };
 
 exports.delete = (req, res) => {
-  User.remove(req.params.id, (err, data) => {
+  User.deleteOne(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
@@ -82,7 +82,7 @@ exports.delete = (req, res) => {
 
 // Delete all Tutorials from the database.
 exports.deleteAll = (req, res) => {
-  User.removeAll(req.params.id, (err, data) => {
+  User.deleteMany({}, (err, data) => {
     if (err)
       res.status(500).send({
         message:

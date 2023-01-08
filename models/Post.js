@@ -10,7 +10,6 @@ const CommentValidator = [
   })
 ];
 
-
 // Define the database model
 const PostSchema = new mongoose.Schema({
   comment: {
