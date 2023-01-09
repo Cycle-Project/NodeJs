@@ -3,7 +3,6 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db.js');
 const path = require('path');
-const { Router } = require('express');
 const router = express.Router();
 const auth = require("./security/middleware/auth");
 const swaggerUI = require("swagger-ui-express");
@@ -20,8 +19,6 @@ const app = express();
 
 //Body Parser
 app.use(express.json({ limit: "5mb" }));
-
-
 
 //Enable Cors
 app.use(cors());
