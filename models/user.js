@@ -39,23 +39,12 @@ const UserSchema = new mongoose.Schema({
 
   password: { type: String },
 
-  followers: {
-    type: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "user"
-    }],
+  friends: {
+    type: [String],
     required: [false],
     unique: false,
     trim: true,
     default: null,
-    maxlength: [100]
-  },
-  following: {
-    type: Array,
-    required: [false],
-    unique: false,
-    default: null,
-    trim: true,
     maxlength: [100]
   },
   token: { type: String },

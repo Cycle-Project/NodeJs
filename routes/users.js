@@ -37,4 +37,28 @@ router.delete('/deletebyid/:id', auth, controller.delete)
 
 router.delete('/delete/all', auth, controller.deleteAll)
 
+/**
+ *  @description for user's friend list
+ *  @method GET /get-friends
+ *  @param id user_id
+ */
+router.get('/get-friends/:id', auth, controller.getFriends)
+
+/**
+ *  @description for add friend to user
+ *  @method PUT /add-friend
+ *  @param id user_id
+ *  @body friend_id
+ */
+router.put('/add-friend/:id', auth, controller.addFriend)
+
+/**
+ *  @description for remove friend from user
+ *  @method DELETE /update
+ *  @param id user_id
+ *  @param fid firend_user_id
+ */
+router.delete('/remove-friend/:id/:fid', auth, controller.removeFriend)
+
+
 module.exports = router;

@@ -186,3 +186,74 @@ exports.deleteAll = (req, res) => {
     else res.send({ message: `All Users were deleted successfully!` });
   });
 };
+
+exports.getFriends = async (req, res, next) => {
+  try {
+    // find the user
+    const user = await User.findOne({ _id: req.params.id })
+
+    // get friends as user[] from their id's
+    const friends = await User.find({ '_id': { $in: user.friends } })
+
+    return res.status(200).json({
+      success: true,
+      count: friends.length,
+      data: friends
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+exports.addFriend = async (req, res, next) => {
+  // find the user
+  const user = await User.findOne({ _id: req.params.id })
+
+  const friend_id = req.body.friend_id
+  if (!friend_id) {
+    res.status(500).send({
+      message: "Could not get friend id " + req.params.id
+    });
+  }
+  user.friends = [...user.friends, friend_id]
+
+  User.updateOne(
+    { _id: req.params.id },
+    { friends: user.friends },
+    (err, data) => {
+      if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found User with id ${req.params.id}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error updating User with id " + req.params.id
+          });
+        }
+      } else res.status(201).send(user);
+    }
+  );
+};
+
+// Delete all Tutorials from the database.
+exports.removeFriend = async (req, res) => {
+  // find the user
+  const user = await User.findOne({ _id: req.params.id })
+
+  user.friends = user.friends.filter(e => e !== req.params.fid)
+
+  User.updateOne(
+    { _id: req.params.id },
+    { friends: user.friends },
+    (err, data) => {
+      if (err)
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while removing friend"
+        });
+      else res.send({ message: `Friend removed successfully!` });
+    },
+  );
+};
