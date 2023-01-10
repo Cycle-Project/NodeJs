@@ -42,24 +42,30 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(docs));
 
 
 const PORT = process.env.PORT || 4652;
-const SOCKETIO_PORT = process.env.SOCKETIO_PORT || 5652;
+const SOCKETIO_PORT = process.env.SOCKETIO_PORT || 2652;
 app.use('/', router);
 app.listen(PORT, () =>
-
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
-);
-
-
+)
 
 const server = require('http').Server(app);
 const socketio = require('socket.io')(server);
 
-
 const socketClient = require('./websocket/client.js')
 
-server.listen(SOCKETIO_PORT, () => {
-  console.log(`Socket.IO Server running in ${process.env.NODE_ENV} mode on port ${SOCKETIO_PORT}`);
-});
+server.listen(SOCKETIO_PORT, () =>
+  console.log(`Socket.IO Server running in ${process.env.NODE_ENV} mode on port ${SOCKETIO_PORT}`)
+)
 
-
-socketio.on('connection', (client) => socketClient(socketio, client))
+socketio.use((socket, next) => {
+  if (socket.handshake.query && socket.handshake.query.token) {
+    auth(socket.handshake.query.token, {}, (err, decoded) => {
+      if (err) return next(new Error('Authentication error'));
+      socket.decoded = decoded;
+      next();
+    })
+  }
+  else {
+    next(new Error('Authentication error'));
+  }
+}).on('connection', (client) => socketClient(socketio, client))
