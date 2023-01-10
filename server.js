@@ -42,6 +42,7 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(docs));
 
 
 const PORT = process.env.PORT || 4652;
+const SOCKETIO_PORT = process.env.SOCKETIO_PORT || 5652;
 app.use('/', router);
 app.listen(PORT, () =>
 
@@ -50,7 +51,15 @@ app.listen(PORT, () =>
 
 
 
+const server = require('http').Server(app);
+const socketio = require('socket.io')(server);
 
 
+const socketClient = require('./websocket/client.js')
+
+server.listen(SOCKETIO_PORT, () => {
+  console.log(`Socket.IO Server running in ${process.env.NODE_ENV} mode on port ${SOCKETIO_PORT}`);
+});
 
 
+socketio.on('connection', (client) => socketClient(socketio, client))
