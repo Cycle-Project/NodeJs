@@ -223,27 +223,45 @@ exports.getRequests = async (req, res, next) => {
 
 // Delete all Tutorials from the database.
 exports.removeFriend = async (req, res) => {
-  // find the user
-  const user = await User.findOne({ _id: req.params.id })
+  try {
+    // find the user
+    const user = await User.findOne({ _id: req.params.id })
+    const fuser = await User.findOne({ _id: req.params.fid })
 
-  if (!user || !user.friends) {
-    return res.status(404).send({
-      message: `Not found User with id ${req.params.id}.`
-    });
+    if (!user || !fuser || !user.friends || !fuser.friends) {
+      return res.status(404).send({
+        message: `Not found one or more User(s)`
+      });
+    }
+
+    user.friends = user.friends.filter(e => e !== req.params.fid)
+    fuser.friends = fuser.friends.filter(e => e !== req.params.id)
+
+    User.updateOne(
+      { _id: req.params.id },
+      { friends: user.friends },
+      (err, data) => {
+        if (err)
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while removing friend"
+          });
+      },
+    );
+
+    User.updateOne(
+      { _id: req.params.fid },
+      { friends: fuser.friends },
+      (err, data) => {
+        if (err)
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while removing friend"
+          });
+      },
+    );
+    res.send({ message: `Friend removed successfully!` });
+  } catch (err) {
+    console.log(err)
   }
-
-  user.friends = user.friends.filter(e => e !== req.params.fid)
-
-  User.updateOne(
-    { _id: req.params.id },
-    { friends: user.friends },
-    (err, data) => {
-      if (err)
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while removing friend"
-        });
-      else res.send({ message: `Friend removed successfully!` });
-    },
-  );
 };

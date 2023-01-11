@@ -24,14 +24,10 @@ const Client = async (io, client) => {
         var friendRequests = await FriendRequest.find({ recipient: id })
         friendRequests = friendRequests.filter(e => e.status === 'pending')
 
-        io.to(sockets[id])
-            .emit(
-                'take-friend-request',
-                {
-                    count: friendRequests.length,
-                    senders: [...friendRequests.map(e => e.sender)],
-                },
-            )
+        io.to(sockets[id]).emit('take-friend-request', {
+            count: friendRequests.length,
+            senders: [...friendRequests.map(e => e.sender)],
+        })
     } catch (err) {
         console.error(err);
     }
@@ -64,14 +60,10 @@ const Client = async (io, client) => {
                 throw new Error('Recipient user is not active')
             }
 
-            io.to(sockets[recipientId])
-                .emit(
-                    'take-friend-request',
-                    {
-                        count: 1,
-                        senders: [senderId],
-                    },
-                )
+            io.to(sockets[recipientId]).emit('take-friend-request', {
+                count: 1,
+                senders: [senderId],
+            })
             console.log('Friend request sended');
 
         } catch (err) {
@@ -80,6 +72,12 @@ const Client = async (io, client) => {
     });
     client.on('respond-friend-request', async (recipientId, senderId, response) => {
         try {
+            if (!senderId) {
+                throw new Error("Could not get user " + senderId)
+            }
+            if (!recipientId) {
+                throw new Error("Could not get user " + recipientId)
+            }
             const request = await FriendRequest.findOne(
                 { sender: senderId, recipient: recipientId },
             );
@@ -87,17 +85,16 @@ const Client = async (io, client) => {
                 throw new Error('This friend request does not exists')
             }
             if (response === 'accepted') {
-                // find the user
-                const user = await User.findOne({ _id: senderId })
+                // find users
+                const senderUser = await User.findOne({ _id: senderId })
+                const recipientUser = await User.findOne({ _id: recipientId })
 
-                if (!recipientId) {
-                    throw new Error("Could not get friend id " + recipientId)
-                }
-                user.friends = [...user.friends, recipientId]
+                senderUser.friends = [...senderUser.friends, recipientId]
+                recipientUser.friends = [...recipientUser.friends, senderId]
 
                 User.updateOne(
                     { _id: senderId },
-                    { friends: user.friends },
+                    { friends: senderUser.friends },
                     (err, data) => {
                         if (err) {
                             if (err.kind === "not_found") {
@@ -108,12 +105,26 @@ const Client = async (io, client) => {
                         }
                     }
                 );
+                User.updateOne(
+                    { _id: recipientId },
+                    { friends: recipientUser.friends },
+                    (err, data) => {
+                        if (err) {
+                            if (err.kind === "not_found") {
+                                throw new Error(`Not found User with id ${senderId}.`)
+                            } else {
+                                throw new Error("Error updating User with id " + senderId)
+                            }
+                        }
+                    }
+                );
             }
             await FriendRequest.deleteOne(
                 { sender: senderId, recipient: recipientId },
             );
 
-            io.to(senderId).emit('friend-request-response', { sender: senderId, response: response })
+            io.to([sockets[senderId], sockets[recipientId]])
+                .emit('friend-request-response', { sender: senderId, response: response })
 
             console.log(`Friend request state is ${response}`);
         } catch (err) {
