@@ -4,7 +4,7 @@ const cors = require('cors');
 const connectDB = require('./config/db.js');
 const path = require('path');
 const router = express.Router();
-const auth = require("./security/middleware/auth");
+const { auth, socketAuth } = require("./security/middleware/auth");
 const swaggerUI = require("swagger-ui-express");
 const docs = require('./docs');
 //const swaggerFile = require('../swagger-output.json')
@@ -62,25 +62,7 @@ app.use("/socket", (req, res) => {
   res.send({ uptime: process.uptime(), sockets: sockets })
 })
 
-socketio.use((socket, next) => {
-  if (socket.handshake.query && socket.handshake.query.token) {
-    console.log("hendshake token: " + socket.handshake.query.token)
-    auth(socket.handshake.query.token, {}, (err, decoded) => {
-      if (err) {
-        console.log("Authentication error")
-        return next(new Error('Authentication error'));
-      }
-      socket.decoded = decoded;
-      next();
-    })
-  }
-  else {
-    console.log("Authentication error")
-    next(new Error('Authentication error'));
-  }
-})
-
-socketio.on('connection', (client) => {
+socketio.use(socketAuth).on('connection', (client) => {
   console.log(`Socket connected: ${client.id}`)
   Client(socketio, client)
 })

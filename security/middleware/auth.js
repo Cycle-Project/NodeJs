@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const config = process.env;
 
-const verifyToken = (req, res, next) => {
+const auth = (req, res, next) => {
     const token =
         req.body.token || req.query.token || req.headers["x-access-token"];
 
@@ -18,4 +18,16 @@ const verifyToken = (req, res, next) => {
     return next();
 };
 
-module.exports = verifyToken;
+const socketAuth = async (socket, next) => {
+    const token = socket.handshake.query.token;
+    try {
+        const decoded = jwt.verify(token, process.env.TOKEN_KEY)
+        // add user data to socket
+        socket.user = decoded
+        next()
+    } catch (err) {
+        next(new Error('Authentication error'))
+    }
+}
+
+module.exports = { auth, socketAuth } 

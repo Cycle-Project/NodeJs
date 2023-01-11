@@ -2,7 +2,7 @@ const User = require('../models/user.js');
 const FriendRequest = require('../models/friend_request.js')
 
 // all client.ids & user.ids will be placed in a set
-const sockets = {}
+var sockets = {}
 
 const Client = async (io, client) => {
     /**
@@ -12,14 +12,17 @@ const Client = async (io, client) => {
      * If user joins succesfully
      * Then 
      *    -> server sends all friend requests as 'take-friend-request' to recipient
-     */
+    */
+    const id = client.user.user_id
     try {
+
+        sockets = { ...sockets, id: client.id }
         sockets[id] = client.id
 
         console.log('Socket Joined Network');
 
-        const friendRequests = await FriendRequest.find({ recipient: id })
-            .filter(e => e.status === 'pending')
+        var friendRequests = await FriendRequest.find({ recipient: id })
+        friendRequests = friendRequests.filter(e => e.status === 'pending')
 
         io.to(sockets[id])
             .emit(
