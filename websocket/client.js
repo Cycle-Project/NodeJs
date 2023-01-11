@@ -1,3 +1,4 @@
+const User = require('../models/user.js');
 const FriendRequest = require('../models/friend_request.js')
 
 // all client.ids & user.ids will be placed in a set
@@ -77,6 +78,35 @@ module.exports = async (io, client) => {
     });
     client.on('respond-friend-request', async (recipientId, senderId, response) => {
         try {
+            const request = await FriendRequest.findOne(
+                { sender: senderId, recipient: recipientId },
+            );
+            if (!request) {
+                throw new Error('This friend request does not exists')
+            }
+            if (response === 'accepted') {
+                // find the user
+                const user = await User.findOne({ _id: senderId })
+
+                if (!recipientId) {
+                    throw new Error("Could not get friend id " + recipientId)
+                }
+                user.friends = [...user.friends, recipientId]
+
+                User.updateOne(
+                    { _id: senderId },
+                    { friends: user.friends },
+                    (err, data) => {
+                        if (err) {
+                            if (err.kind === "not_found") {
+                                throw new Error(`Not found User with id ${recipientId}.`)
+                            } else {
+                                throw new Error("Error updating User with id " + recipientId)
+                            }
+                        }
+                    }
+                );
+            }
             await FriendRequest.deleteOne(
                 { sender: senderId, recipient: recipientId },
             );
