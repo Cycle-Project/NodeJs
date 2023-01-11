@@ -1,16 +1,15 @@
 const User = require('../models/user.js');
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const auth = require("../security/middleware/auth.js");
-exports.postregister = (async (req, res, next) => {
 
+exports.postregister = (async (req, res, next) => {
   try {
     // Get user input
     const { name, email, password } = req.body;
 
     // Validate user input
     if (!(email && password && name)) {
-      res.status(400).send("All input is required");
+      return res.status(400).send("All input is required");
     }
 
     // check if user already exist
@@ -49,26 +48,25 @@ exports.postregister = (async (req, res, next) => {
   }
 });
 
-exports.postuser = ("/login", async (req, res) => {
+exports.postlogin = ("/login", async (req, res) => {
   try {
     // Get user input
     const { email, password } = req.body;
 
     // Validate user input
     if (!(email && password)) {
-      res.status(400).send("All input is required");
+      return res.status(400).send("All input is required");
     }
     // Validate if user exist in our database
     const user = await User.findOne({ email });
 
-    if (user && (await bcrypt.compare(password, user.password))) {
+    if (user && bcrypt.compare(password, user.password)) {
       // Create token
       const token = jwt.sign(
         { user_id: user._id, email },
         process.env.TOKEN_KEY,
         {
           expiresIn: "2h",
-
         }
       );
 
@@ -88,7 +86,7 @@ exports.getUsers = async (req, res, next) => {
   try {
     const users = await User.find();
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       count: users.length,
       data: users
@@ -116,7 +114,7 @@ exports.createuser = async (req, res, next) => {
   try {
     const user = await User.create(req.body);
 
-    return res.status(201).json({
+    res.status(201).json({
       success: true,
       data: user, Date
 
@@ -124,7 +122,7 @@ exports.createuser = async (req, res, next) => {
   } catch (err) {
     console.error(err);
     if (err.code === 11000) {
-      return res.status(400).json({ error: 'This user already exists' });
+      res.status(400).json({ error: 'This user already exists' });
     }
     res.status(500).json({ error: 'Server error' });
   }
@@ -133,7 +131,7 @@ exports.createuser = async (req, res, next) => {
 exports.update = (req, res) => {
   // Validate Request
   if (!req.body) {
-    res.status(400).send({
+    return res.status(400).send({
       message: "Content can not be empty!"
     });
   }
@@ -195,7 +193,7 @@ exports.getFriends = async (req, res, next) => {
     // get friends as user[] from their id's
     const friends = await User.find({ '_id': { $in: user.friends } })
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       count: friends.length,
       data: friends
@@ -206,41 +204,16 @@ exports.getFriends = async (req, res, next) => {
   }
 };
 
-exports.addFriend = async (req, res, next) => {
-  // find the user
-  const user = await User.findOne({ _id: req.params.id })
-
-  const friend_id = req.body.friend_id
-  if (!friend_id) {
-    res.status(500).send({
-      message: "Could not get friend id " + req.params.id
-    });
-  }
-  user.friends = [...user.friends, friend_id]
-
-  User.updateOne(
-    { _id: req.params.id },
-    { friends: user.friends },
-    (err, data) => {
-      if (err) {
-        if (err.kind === "not_found") {
-          res.status(404).send({
-            message: `Not found User with id ${req.params.id}.`
-          });
-        } else {
-          res.status(500).send({
-            message: "Error updating User with id " + req.params.id
-          });
-        }
-      } else res.status(201).send(user);
-    }
-  );
-};
-
 // Delete all Tutorials from the database.
 exports.removeFriend = async (req, res) => {
   // find the user
   const user = await User.findOne({ _id: req.params.id })
+
+  if (!user || !user.friends) {
+    return res.status(404).send({
+      message: `Not found User with id ${req.params.id}.`
+    });
+  }
 
   user.friends = user.friends.filter(e => e !== req.params.fid)
 

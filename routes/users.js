@@ -5,7 +5,7 @@ const auth = require("../security/middleware/auth.js");
 const controller = require('../controllers/users.js');
 
 router.post('/register', controller.postregister);
-router.post('/login', controller.postuser);
+router.post('/login', controller.postlogin);
 
 /**
  *  @description User user
@@ -43,14 +43,6 @@ router.delete('/delete/all', auth, controller.deleteAll)
  *  @param id user_id
  */
 router.get('/get-friends/:id', auth, controller.getFriends)
-
-/**
- *  @description for add friend to user
- *  @method PUT /add-friend
- *  @param id user_id
- *  @body friend_id
- */
-router.put('/add-friend/:id', auth, controller.addFriend)
 
 /**
  *  @description for remove friend from user
