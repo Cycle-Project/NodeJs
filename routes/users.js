@@ -43,11 +43,12 @@ router.delete('/delete/all', auth, controller.deleteAll)
  *  @param id user_id
  */
 router.get('/get-friends/:id', auth, controller.getFriends)
+
 /**
  *  @description for user's friend list
  *  @method GET /get-requests
  */
-router.get('/get-requests', auth, controller.getRequests)
+router.get('/getRequests', auth, controller.getRequests)
 
 /**
  *  @description for remove friend from user

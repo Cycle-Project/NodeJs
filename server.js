@@ -58,11 +58,11 @@ server.listen(SOCKETIO_PORT, () =>
 )
 
 
-router.get("/api/socket", (req, res) => {
+app.use("/socket", (req, res) => {
   res.send({ uptime: process.uptime(), sockets: sockets })
 })
 
-/* socketio.use((socket, next) => {
+socketio.use((socket, next) => {
   if (socket.handshake.query && socket.handshake.query.token) {
     console.log("hendshake token: " + socket.handshake.query.token)
     auth(socket.handshake.query.token, {}, (err, decoded) => {
@@ -78,7 +78,7 @@ router.get("/api/socket", (req, res) => {
     console.log("Authentication error")
     next(new Error('Authentication error'));
   }
-}) */
+})
 
 socketio.on('connection', (client) => {
   console.log(`Socket connected: ${client.id}`)
