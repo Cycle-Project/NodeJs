@@ -58,7 +58,7 @@ server.listen(SOCKETIO_PORT, () =>
 )
 
 
-app.get("/api/socket", (req, res) => {
+router.get("/api/socket", (req, res) => {
   res.send({ uptime: process.uptime(), sockets: sockets })
 })
 
