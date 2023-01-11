@@ -4,8 +4,7 @@ const FriendRequest = require('../models/friend_request.js')
 // all client.ids & user.ids will be placed in a set
 const sockets = {}
 
-module.exports = async (io, client) => {
-    console.log(`Socket connected: ${client.id}`)
+const Client = async (io, client) => {
     /**
      * @description Client sends friend request to recipient
      * @param id user's id
@@ -118,4 +117,9 @@ module.exports = async (io, client) => {
             console.error(err);
         }
     });
+}
+
+module.exports = {
+    sockets,
+    Client
 }

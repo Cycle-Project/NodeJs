@@ -51,21 +51,36 @@ app.listen(PORT, () =>
 const server = require('http').Server(app);
 const socketio = require('socket.io')(server);
 
-const socketClient = require('./websocket/client.js')
+const { sockets, Client } = require('./websocket/client.js')
 
 server.listen(SOCKETIO_PORT, () =>
   console.log(`Socket.IO Server running in ${process.env.NODE_ENV} mode on port ${SOCKETIO_PORT}`)
 )
 
-socketio.use((socket, next) => {
+
+app.get("/api/socket", (req, res) => {
+  res.send({ uptime: process.uptime(), sockets: sockets })
+})
+
+/* socketio.use((socket, next) => {
   if (socket.handshake.query && socket.handshake.query.token) {
+    console.log("hendshake token: " + socket.handshake.query.token)
     auth(socket.handshake.query.token, {}, (err, decoded) => {
-      if (err) return next(new Error('Authentication error'));
+      if (err) {
+        console.log("Authentication error")
+        return next(new Error('Authentication error'));
+      }
       socket.decoded = decoded;
       next();
     })
   }
   else {
+    console.log("Authentication error")
     next(new Error('Authentication error'));
   }
-}).on('connection', (client) => socketClient(socketio, client))
+}) */
+
+socketio.on('connection', (client) => {
+  console.log(`Socket connected: ${client.id}`)
+  Client(socketio, client)
+})

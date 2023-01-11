@@ -1,4 +1,5 @@
 const User = require('../models/user.js');
+const FriendRequest = require('../models/friend_request.js')
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -197,6 +198,22 @@ exports.getFriends = async (req, res, next) => {
       success: true,
       count: friends.length,
       data: friends
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+exports.getRequests = async (req, res, next) => {
+  try {
+    // find the user
+    const requests = await FriendRequest.find()
+
+    res.status(200).json({
+      success: true,
+      count: requests.length,
+      data: requests
     });
   } catch (err) {
     console.error(err);
