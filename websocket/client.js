@@ -21,6 +21,8 @@ const Client = async (io, client) => {
 
         console.log('Socket Joined Network');
 
+        io.to(sockets[id]).emit('welcome', 'Welcome Client')
+
         var friendRequests = await FriendRequest.find({ recipient: id })
         friendRequests = friendRequests.filter(e => e.status === 'pending')
 
