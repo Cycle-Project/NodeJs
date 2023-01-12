@@ -32,37 +32,34 @@ app.use('/api/post', require('./routes/posts.js'), auth);
 
 app.use('/api/route', require('./routes/route.js'), auth);
 
-router.get('/', function (req, res) {
+/* router.get('/', function (req, res) {
   res.sendFile(path.join(__dirname + '/public/index.html'));
   //__dirname : It will resolve to your project folder.
-});
+}); */
 
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(docs));
 //app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
-
 const PORT = process.env.PORT || 4652;
 const SOCKETIO_PORT = process.env.SOCKETIO_PORT || 5652;
 app.use('/', router);
+
 app.listen(PORT, () =>
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
 )
 
 const server = require('http').Server(app);
-const socketio = require('socket.io')(server);
+const socketio = require('socket.io')(server, {
+  path: "/my-socket"
+});
+const { Client } = require('./websocket/client.js')
 
-const { sockets, Client } = require('./websocket/client.js')
-
+socketio
+  .use(socketAuth)
+  .on('connection', (client) => {
+    console.log(`Socket connected: ${client.id}`)
+    Client(socketio, client)
+  })
 server.listen(SOCKETIO_PORT, () =>
-  console.log(`Socket.IO Server running in ${process.env.NODE_ENV} mode on port ${SOCKETIO_PORT}`)
+  console.log(`Socket.io Server running in ${process.env.NODE_ENV} mode on port ${SOCKETIO_PORT}`)
 )
-
-
-router.get("/socket", (req, res) => {
-  res.send({ uptime: process.uptime(), port: SOCKETIO_PORT, sockets: sockets })
-})
-
-socketio.use(socketAuth).on('connection', (client) => {
-  console.log(`Socket connected: ${client.id}`)
-  Client(socketio, client)
-})
