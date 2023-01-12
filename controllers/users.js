@@ -43,7 +43,7 @@ exports.postregister = (async (req, res, next) => {
     user.token = token;
 
     // return new user
-    res.status(201).json(user);
+    return res.status(201).json(user);
   } catch (err) {
     console.log(err);
   }
@@ -75,9 +75,9 @@ exports.postlogin = ("/login", async (req, res) => {
       user.token = token;
 
       // user
-      res.status(200).json(user);
+      return res.status(200).json(user);
     }
-    res.status(400).send("Invalid Credentials");
+    return res.status(400).send("Invalid Credentials");
   } catch (err) {
     console.log(err);
   }
@@ -87,21 +87,21 @@ exports.getUsers = async (req, res, next) => {
   try {
     const users = await User.find();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       count: users.length,
       data: users
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    return res.status(500).json({ error: 'Server error' });
   }
 };
 
 exports.findbyid = (req, res) => {
   User.findById(req.params.id, (err, data) => {
     if (err)
-      res.status(500).send({
+      return res.status(500).send({
         message:
           err.message || "Error occured. FindById."
       });
@@ -115,7 +115,7 @@ exports.createuser = async (req, res, next) => {
   try {
     const user = await User.create(req.body);
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       data: user, Date
 
@@ -123,9 +123,9 @@ exports.createuser = async (req, res, next) => {
   } catch (err) {
     console.error(err);
     if (err.code === 11000) {
-      res.status(400).json({ error: 'This user already exists' });
+      return res.status(400).json({ error: 'This user already exists' });
     }
-    res.status(500).json({ error: 'Server error' });
+    return res.status(500).json({ error: 'Server error' });
   }
 };
 
@@ -145,11 +145,11 @@ exports.update = (req, res) => {
     (err, data) => {
       if (err) {
         if (err.kind === "not_found") {
-          res.status(404).send({
+          return res.status(404).send({
             message: `Not found User with id ${req.params.id}.`
           });
         } else {
-          res.status(500).send({
+          return res.status(500).send({
             message: "Error updating User with id " + req.params.id
           });
         }
@@ -162,15 +162,15 @@ exports.delete = (req, res) => {
   User.deleteOne(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
-        res.status(404).send({
+        return res.status(404).send({
           message: `Not found user with id ${req.params.id}.`
         });
       } else {
-        res.status(500).send({
+        return res.status(500).send({
           message: "Could not delete user with id " + req.params.id
         });
       }
-    } else res.send({ message: `User was deleted successfully!` });
+    } else return res.send({ message: `User was deleted successfully!` });
   });
 };
 
@@ -178,11 +178,11 @@ exports.delete = (req, res) => {
 exports.deleteAll = (req, res) => {
   User.deleteMany({}, (err) => {
     if (err)
-      res.status(500).send({
+      return res.status(500).send({
         message:
           err.message || "Some error occurred while removing all Users."
       });
-    else res.send({ message: `All Users were deleted successfully!` });
+    else return res.send({ message: `All Users were deleted successfully!` });
   });
 };
 
@@ -194,14 +194,14 @@ exports.getFriends = async (req, res, next) => {
     // get friends as user[] from their id's
     const friends = await User.find({ '_id': { $in: user.friends } })
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       count: friends.length,
       data: friends
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    return res.status(500).json({ error: 'Server error' });
   }
 };
 
@@ -210,14 +210,14 @@ exports.getRequests = async (req, res, next) => {
     // find the user
     const requests = await FriendRequest.find()
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       count: requests.length,
       data: requests
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    return res.status(500).json({ error: 'Server error' });
   }
 };
 
@@ -242,7 +242,7 @@ exports.removeFriend = async (req, res) => {
       { friends: user.friends },
       (err, data) => {
         if (err)
-          res.status(500).send({
+          return res.status(500).send({
             message:
               err.message || "Some error occurred while removing friend"
           });
@@ -254,13 +254,13 @@ exports.removeFriend = async (req, res) => {
       { friends: fuser.friends },
       (err, data) => {
         if (err)
-          res.status(500).send({
+          return res.status(500).send({
             message:
               err.message || "Some error occurred while removing friend"
           });
       },
     );
-    res.send({ message: `Friend removed successfully!` });
+    return res.send({ message: `Friend removed successfully!` });
   } catch (err) {
     console.log(err)
   }

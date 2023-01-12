@@ -11,7 +11,7 @@ exports.getRoutes = async (req, res, next) => {
         });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Server error' });
+        return res.status(500).json({ error: 'Server error' });
     }
 };
 
@@ -30,7 +30,7 @@ exports.createRoute = async (req, res, next) => {
         if (err.code === 11000) {
             return res.status(400).json({ error: 'This route already exists' });
         }
-        res.status(500).json({ error: 'Server error' });
+        return res.status(500).json({ error: 'Server error' });
     }
 };
 
@@ -42,13 +42,13 @@ exports.createRoute = async (req, res, next) => {
 exports.addPosition = async (req, res) => {
     // Validate Request
     if (!req.body) {
-        res.status(400).send({
+        return res.status(400).send({
             message: "Content can not be empty!"
         });
     }
     // Validate Request
     if (!req.params.id) {
-        res.status(400).send({
+        return res.status(400).send({
             message: "Route_id is missing!"
         });
     }
@@ -71,15 +71,15 @@ exports.addPosition = async (req, res) => {
             (err, data) => {
                 if (err) {
                     if (err.kind === "not_found") {
-                        res.status(404).send({
+                        return res.status(404).send({
                             message: `Not found Route with id ${req.params.id}.`
                         });
                     } else {
-                        res.status(500).send({
+                        return res.status(500).send({
                             message: "Error updating Route with id " + req.params.id
                         });
                     }
-                } else res.status(201).json({
+                } else return res.status(201).json({
                     success: true,
                     data: route
                 });
@@ -87,20 +87,20 @@ exports.addPosition = async (req, res) => {
         );
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Server error' });
+        return res.status(500).json({ error: 'Server error' });
     }
 };
 
 exports.update = (req, res) => {
     // Validate Request
     if (!req.body) {
-        res.status(400).send({
+        return res.status(400).send({
             message: "Content can not be empty!"
         });
     }
     // Validate Request
     if (!req.params.id) {
-        res.status(400).send({
+        return res.status(400).send({
             message: "Route_id is missing!"
         });
     }
@@ -111,15 +111,15 @@ exports.update = (req, res) => {
         (err, data) => {
             if (err) {
                 if (err.kind === "not_found") {
-                    res.status(404).send({
+                    return res.status(404).send({
                         message: `Not found Route with id ${req.params.id}.`
                     });
                 } else {
-                    res.status(500).send({
+                    return res.status(500).send({
                         message: "Error updating Route with id " + req.params.id
                     });
                 }
-            } else res.send(data);
+            } else return res.send(data);
         }
     );
 };
@@ -128,15 +128,15 @@ exports.delete = (req, res) => {
     Route.deleteOne(req.params.id, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
-                res.status(404).send({
+                return res.status(404).send({
                     message: `Not found Route with id ${req.params.id}.`
                 });
             } else {
-                res.status(500).send({
+                return res.status(500).send({
                     message: "Could not delete Route with id " + req.params.id
                 });
             }
-        } else res.send({ message: `route was deleted successfully!` });
+        } else return res.send({ message: `route was deleted successfully!` });
     });
 };
 
@@ -144,11 +144,11 @@ exports.delete = (req, res) => {
 exports.deleteAll = (req, res) => {
     Route.deleteMany({}, (err, data) => {
         if (err)
-            res.status(500).send({
+            return res.status(500).send({
                 message:
                     err.message || "Some error occurred while removing all route."
             });
-        else res.send({ message: `All Routes were deleted successfully!` });
+        else return res.send({ message: `All Routes were deleted successfully!` });
     });
 };
 

@@ -10,7 +10,7 @@ exports.getPosts = async (req, res, next) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    return res.status(500).json({ error: 'Server error' });
   }
 };
 
@@ -31,14 +31,14 @@ exports.createpost = async (req, res, next) => {
     if (err.code === 11000) {
       return res.status(400).json({ error: 'This post already exists' });
     }
-    res.status(500).json({ error: 'Server error' });
+    return res.status(500).json({ error: 'Server error' });
   }
 };
 
 exports.update = (req, res) => {
   // Validate Request
   if (!req.body) {
-    res.status(400).send({
+    return res.status(400).send({
       message: "Content can not be empty!"
     });
   }
@@ -51,11 +51,11 @@ exports.update = (req, res) => {
     (err, data) => {
       if (err) {
         if (err.kind === "not_found") {
-          res.status(404).send({
+          return res.status(404).send({
             message: `Not found User with id ${req.params.id}.`
           });
         } else {
-          res.status(500).send({
+          return res.status(500).send({
             message: "Error updating User with id " + req.params.id
           });
         }
@@ -68,11 +68,11 @@ exports.delete = (req, res) => {
   User.deleteOne(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
-        res.status(404).send({
+        return res.status(404).send({
           message: `Not found user with id ${req.params.id}.`
         });
       } else {
-        res.status(500).send({
+        return res.status(500).send({
           message: "Could not delete user with id " + req.params.id
         });
       }
@@ -84,11 +84,11 @@ exports.delete = (req, res) => {
 exports.deleteAll = (req, res) => {
   User.deleteMany({}, (err, data) => {
     if (err)
-      res.status(500).send({
+      return res.status(500).send({
         message:
           err.message || "Some error occurred while removing all post."
       });
-    else res.send({ message: `All Users were deleted successfully!` });
+    else return res.send({ message: `All Users were deleted successfully!` });
   });
 };
 
