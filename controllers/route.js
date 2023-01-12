@@ -23,7 +23,7 @@ exports.createRoute = async (req, res, next) => {
 
         return res.status(201).json({
             success: true,
-            data: routes, Date
+            data: routes
         });
     } catch (err) {
         console.error(err);

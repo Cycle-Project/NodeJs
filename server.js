@@ -42,7 +42,7 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(docs));
 
 
 const PORT = process.env.PORT || 4652;
-const SOCKETIO_PORT = process.env.SOCKETIO_PORT || 2652;
+const SOCKETIO_PORT = process.env.SOCKETIO_PORT || 5652;
 app.use('/', router);
 app.listen(PORT, () =>
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
@@ -58,8 +58,8 @@ server.listen(SOCKETIO_PORT, () =>
 )
 
 
-app.use("/socket", (req, res) => {
-  res.send({ uptime: process.uptime(), sockets: sockets })
+router.get("/socket", (req, res) => {
+  res.send({ uptime: process.uptime(), port: SOCKETIO_PORT, sockets: sockets })
 })
 
 socketio.use(socketAuth).on('connection', (client) => {
