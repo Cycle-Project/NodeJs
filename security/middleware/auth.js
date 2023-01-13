@@ -18,16 +18,4 @@ const auth = (req, res, next) => {
     return next();
 };
 
-const socketAuth = async (socket, next) => {
-    const token = socket.handshake.query.token;
-    try {
-        const decoded = jwt.verify(token, process.env.TOKEN_KEY)
-        // add user data to socket
-        socket.user = decoded
-        next()
-    } catch (err) {
-        next(new Error('Authentication error'))
-    }
-}
-
-module.exports = { auth, socketAuth } 
+module.exports = { auth } 
