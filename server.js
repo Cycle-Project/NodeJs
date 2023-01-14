@@ -8,7 +8,8 @@ const swaggerUI = require("swagger-ui-express");
 const docs = require('./docs');
 //const swaggerFile = require('../swagger-output.json')
 // load environment  vars
-
+var fs = require('fs');
+var path = require('path');
 dotenv.config({ path: './config/config.env' });
 
 //Connect to Database
@@ -30,6 +31,9 @@ app.use('/api/stores', require('./routes/stores.js'), auth);
 app.use('/api/post', require('./routes/posts.js'), auth);
 
 app.use('/api/route', require('./routes/route.js'), auth);
+
+app.use('/api/image', require('./routes/image.js'));
+
 
 router.get('/', function (req, res) {
   res.sendFile(path.join(__dirname + '/public/index.html'));
