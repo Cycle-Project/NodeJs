@@ -10,6 +10,13 @@ const controller = require('../controllers/route.js');
 router.get('/list', auth, controller.getRoutes);
 
 /**
+ *  @description Route route
+ *  @method GET /routes
+ *  @param id user_id
+ */
+router.get('/routes-of/:id', auth, controller.getRoutesOf);
+
+/**
  *  @description add route
  *  @method POST /add-route
  */
