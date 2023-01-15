@@ -15,6 +15,24 @@ exports.getRoutes = async (req, res, next) => {
     }
 };
 
+exports.getRoutesOf = async (req, res, next) => {
+    try {
+        if (!req.params.id) {
+            throw new Error('User id is null!')
+        }
+        const routes = await Route.find({ userMadeId: req.params.id });
+
+        return res.status(200).json({
+            success: true,
+            count: routes.length,
+            data: routes
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Server error' });
+    }
+};
+
 // @desc  Create a route
 // @access Public
 exports.createRoute = async (req, res, next) => {

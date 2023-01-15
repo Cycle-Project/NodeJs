@@ -19,8 +19,15 @@ const RouteSchema = new mongoose.Schema({
     userMadeId: {
         type: String,
         required: true
+    },
+    title: {
+        type: String,
+        required: true
+    },
+    notes: {
+        type: String,
+        required: false,
     }
-
 });
 
 module.exports = mongoose.model('Route', RouteSchema);
