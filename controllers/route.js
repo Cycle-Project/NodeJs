@@ -35,21 +35,21 @@ exports.getRoutesOf = async (req, res, next) => {
 
 // @desc  Create a route
 // @access Public
-exports.createRoute = async (req, res, next) => {
-    try {
-        const routes = await Route.create(req.body);
-
-        return res.status(201).json({
-            success: true,
-            data: routes
-        });
-    } catch (err) {
-        console.error(err);
-        if (err.code === 11000) {
-            return res.status(400).json({ error: 'This route already exists' });
+exports.createRoute = (req, res, next) => {
+    Route.create(req.body,
+        (err, data) => {
+            if (err) {
+                console.error(err);
+                if (err.code === 11000) {
+                    return res.status(400).json({ error: 'This route already exists' });
+                }
+                return res.status(500).json({ error: 'Server error' });
+            } else return res.status(201).json({
+                success: true,
+                data: data
+            });
         }
-        return res.status(500).json({ error: 'Server error' });
-    }
+    );
 };
 
 /**
@@ -83,7 +83,7 @@ exports.addPosition = async (req, res) => {
         // append new position
         route.positions = [...route.positions, newPosition]
 
-        Route.updateOne(
+        await Route.updateOne(
             { _id: req.params.id },
             { positions: route.positions },
             (err, data) => {
@@ -99,7 +99,7 @@ exports.addPosition = async (req, res) => {
                     }
                 } else return res.status(201).json({
                     success: true,
-                    data: route
+                    data: data
                 });
             }
         );
@@ -137,7 +137,10 @@ exports.update = (req, res) => {
                         message: "Error updating Route with id " + req.params.id
                     });
                 }
-            } else return res.send(data);
+            } else return res.status(201).json({
+                success: true,
+                data: data
+            });
         }
     );
 };
