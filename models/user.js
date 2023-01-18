@@ -36,9 +36,14 @@ const UserSchema = new mongoose.Schema({
     unique: true,
     validate: emailValidator
   },
-
-  password: { type: String },
-
+  password: {
+    type: String,
+    required: [true, 'Password is required.'],
+  },
+  created_time: {
+    type: Date,
+    default: Date.now
+  },
   friends: {
     type: [String],
     required: [false],

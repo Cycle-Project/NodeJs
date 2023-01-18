@@ -12,19 +12,28 @@ const CommentValidator = [
 
 // Define the database model
 const PostSchema = new mongoose.Schema({
-  comment: {
-    type: String,
-    required: [false, 'comment  is not required.'],
-    validate: CommentValidator
+  comments: {
+    type: [{
+      comment: {
+        type: String,
+        required: false,
+        validate: CommentValidator
+      },
+      userMadeId: {
+        type: String,
+        required: false,
+      },
+    }],
+    required: false,
   },
-  like: {
-    type: String,
+  likes: {
+    type: [String],
     required: false
   },
-  share: {
-    type: Array,
-    required: false
-  },
+  routeId: {
+    type: String,
+    required: [false, 'Route is not required.'],
+  }
 }
 );
 
